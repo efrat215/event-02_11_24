@@ -1,0 +1,76 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      axios.get("https://localhost:7184/api/Events").then((res) => {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: res.data,
+        });
+        calendar.render();
+      });
+    });
+</script>
+
+<script>
+    function postFunction() {
+      const event={  title:"",start:""}
+            event.title=prompt("enter the event");
+            event.start=prompt("enter the date of the event");
+      axios.post(`https://localhost:7184/api/Events`,event).then((res) => {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: res.data,
+        });
+        calendar.render();
+      });
+    };
+</script>
+
+<script>
+   function putFunction() { 
+     const id=prompt("enter id:");
+     const event={title:"",start:""};
+     event.title=prompt("enter the event");
+     event.start=prompt("enter the date of the event");
+      axios.put(`https://localhost:7184/api/Events/${id}`,event).then((res) => {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: res.data,
+        });
+        calendar.render();
+      });
+    };
+</script>
+
+    <script>
+    function deleteFunction() {
+      const id=prompt("enter id")
+      axios.delete(`https://localhost:7184/api/Events/1/${id}`) .then((res) => {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: res.data,
+        });
+        calendar.render();
+       });   
+      
+    };
+</script>
+
+  </head>
+  <body>
+      <button id="delete" onclick="deleteFunction()">delete</button><br>
+      <button id="post" onclick="postFunction()">post</button>
+      <button id="put" onclick="putFunction()">put</button>
+    <div id='calendar'></div>
+
+  </body>
+</html>
